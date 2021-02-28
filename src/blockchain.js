@@ -194,10 +194,20 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            
-        });
-    }
+            self.chain.forEach(block => {
+                const isValidBlock = block.validate();
+                if ( isValidBlock) {
+                   errorLog.push({ error: 'Block validation failed' })
+             };
+                if ( block.hash -1 != block.previousBlockHash){
+                    if( block.height < 1){ 
+                    errorLog.push({  error: 'Hash of previous block do not match'});
+                }
+            }
+            }              
+        );
+    })
 
-}
+}}
 
 module.exports.Blockchain = Blockchain;   
