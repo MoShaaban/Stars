@@ -206,7 +206,8 @@ class Blockchain {
             }
             }              
         );
-    })
+        resolve(errorLog);
+    });
 
 }}
 
