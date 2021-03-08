@@ -71,8 +71,9 @@ class Blockchain {
            }
            self.height = chainHeight + 1;
            block.height = chainHeight + 1;
-           block.time = new Date().getTime().toString().slice(0, 3);
+           block.time = new Date().getTime().toString().slice(0, -3);
            block.hash = SHA256(JSON.stringify(block)).toString();
+           await validateChain()
            self.chain.push(block);
            console.log(self.chain);
             resolve(block);
@@ -118,7 +119,7 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
             const messageTime = parseInt(message.split(':')[1])
-            if (currentTime < (messageTime + (5 * 60 * 1000))) {
+            if (currentTime < (messageTime + (5 * 60 ))) {
                 const checkMessage = bitcoinMessage.verify(message, address, signature);
                 if (checkMessage) {
                     const newBlock = new BlockClass.Block({ owner: address, star: star });
@@ -158,7 +159,7 @@ class Blockchain {
     getBlockByHeight(height) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let block = self.chain.filter(p => p.height === height)[0];
+            let block = self.chain.find(p => p.height === height)[0];
             if(block){
                 resolve(block);
             } else {
@@ -198,16 +199,18 @@ class Blockchain {
     validateChain() {
         let self = this;
         let errorLog = [];
+        const prevHash = null;
         return new Promise(async (resolve, reject) => {
             self.chain.forEach(block => {
                 const isValidBlock = block.validate();
                 if ( isValidBlock) {
                    errorLog.push({ error: 'Block validation failed' })
              };
-                if ( block.hash -1 != block.previousBlockHash){
+                if (prevHash !== block.previousBlockHash){
                     if( block.height < 1){ 
                     errorLog.push({  error: 'Hash of previous block do not match'});
                 }
+                prevHash = block.hash;
             }
             }              
         );
