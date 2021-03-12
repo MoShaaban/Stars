@@ -47,10 +47,10 @@ class Block {
             // Comparing if the hashes changed
             if(newHash !== currentHash){
             // Returning the Block is not valid
-                resolve (true);
+                resolve (false);
             // Returning the Block is valid
             }else{
-                reject (false);
+                reject (true);
             }
         });
     }
@@ -65,6 +65,8 @@ class Block {
      *     or Reject with an error.
      */
     getBData() {
+        let self = this;
+        return new Promise(async (resolve, reject) => {
         // Getting the encoded data saved in the Block
         const bodyData = this.body;
         // Decoding the data to retrieve the JSON representation of the object
@@ -73,9 +75,12 @@ class Block {
         const newObj = JSON.parse(decodedBody);
         // Resolve with the data if the object isn't the Genesis block
         if(this.height > 0){
-            return newObj;
+            resolve(newObj);
+        }else{
+            reject('genesis block')
         }
-    }
+    });
+}
 
 }
 
