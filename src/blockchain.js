@@ -67,7 +67,7 @@ class Blockchain {
             let chainHeight = await this.getChainHeight();
             console.log(chainHeight);
             if (chainHeight >= 0) {
-                block.previousBlockHash = self.chain[chainHeight - 1].hash;
+                block.previousBlockHash = self.chain[self.height].hash;
             }
             
 
