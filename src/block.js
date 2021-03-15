@@ -47,10 +47,10 @@ class Block {
             // Comparing if the hashes changed
             if(newHash !== currentHash){
             // Returning the Block is not valid
-                resolve (false);
+                resolve (true);
             // Returning the Block is valid
             }else{
-                reject (true);
+                reject (false);
             }
         });
     }
